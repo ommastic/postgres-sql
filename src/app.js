@@ -1,13 +1,30 @@
 import express from "express";
 import cors from "cors";
-import db from "./db.js";
+import productRoutes from './routes/products.js'
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 
-/*challenge 1
+app.use('/api/products', productRoutes);
+
+
+export default app;
+
+
+
+
+/* CRUD 
+  
+// POST   /api/products       → Create
+// GET    /api/products       → Read all
+// GET    /api/products/:id   → Read one
+// PATCH  /api/products/:id   → Update
+// DELETE /api/products/:id   → Delete
+
+
+challenge 1
 app.get("/api/products", async (req, res) => {
   try {
     const request = "SELECT * FROM products ORDER BY product_id";
@@ -134,7 +151,7 @@ app.patch("/api/products/:id", async (req, res) => {
     console.log(err);
     res.status(500).json({ error: "Server Error" });
   }
-}); */
+}); 
 
 app.delete('/api/products/:id', async(req, res) => {
   try{
@@ -155,6 +172,6 @@ app.delete('/api/products/:id', async(req, res) => {
     console.log(err);
     res.status(500).json({error: 'Server Error'})
   }
-})
+}); 
 
-export default app;
+export default app; */
