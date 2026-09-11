@@ -11,11 +11,10 @@ export async function getAllProducts(req, res) {
   }
 }
 
-
 export async function searchProducts(req, res) {
   try {
     const name = req.query.name;
-    if (!name) {
+    if (!name?.trim()) {
       return res.status(400).json({ error: "please enter a search query" });
     }
     const request = "SELECT * FROM products WHERE name ILIKE $1";
@@ -30,12 +29,15 @@ export async function searchProducts(req, res) {
   }
 }
 
-
 export async function getProductById(req, res) {
   try {
-    const id = req.params.id;
+    const numericId = Number(req.params.id);
+    if (!Number.isInteger(numericId) || numericId <= 0) {
+      return res.status(400).json({ error: "Enter a valid product Id" });
+    }
+
     const request = "SELECT * FROM products WHERE product_id = $1";
-    const result = await db.query(request, [id]);
+    const result = await db.query(request, [numericId]);
     if (result.rows.length === 0) {
       return res.status(404).json({ error: "product not found" });
     }
@@ -46,7 +48,6 @@ export async function getProductById(req, res) {
   }
 }
 
-
 export async function createProduct(req, res) {
   try {
     const { name, price, category_id } = req.body;
@@ -54,6 +55,14 @@ export async function createProduct(req, res) {
       return res
         .status(400)
         .json({ error: "data missing, check and enter again" });
+    }
+
+    if (
+      Number(price) < 0 ||
+      Number.isInteger(Number(category_id)) ||
+      Number(category_id) <= 0
+    ) {
+      return res.status(400).json({ error: "Invalid price or category" });
     }
 
     const request = `INSERT INTO products(name, price, category_id) VALUES ($1, $2, $3) RETURNING *`;
@@ -65,12 +74,14 @@ export async function createProduct(req, res) {
   }
 }
 
-
 export async function updateProduct(req, res) {
   try {
     const { name, price, category_id } = req.body;
     const id = req.params.id;
     const numericId = Number(id);
+    if  (name !== undefined && !name.trim()){
+      return res.status(400).json({error: "name cannot be empty"})
+    }
 
     if (
       name === undefined &&
@@ -103,7 +114,6 @@ export async function updateProduct(req, res) {
   }
 }
 
-
 export async function deleteProduct(req, res) {
   try {
     const id = req.params.id;
@@ -119,7 +129,7 @@ export async function deleteProduct(req, res) {
         .json({ error: "Missing product, check the id and enter again" });
     }
     res.status(200).json({
-      message: "Product deleted succesfully",
+      message: "Product deleted successfully",
       product: result.rows[0],
     });
   } catch (err) {
