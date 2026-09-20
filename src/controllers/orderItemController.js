@@ -34,7 +34,7 @@ export async function updateOrderItem(req, res){
   const orderId = req.orderId;
   const productId = req.productId;
 
-  const request = `UPDATE order_items SET quantity = COALESCE($1, quantity), unit_price = COALESCE($2, unit_price) WHERE order_id = $3 AND product_id = $5 RETURNING *`
+  const request = `UPDATE order_items SET quantity = COALESCE($1, quantity), unit_price = COALESCE($2, unit_price) WHERE order_id = $3 AND product_id = $4 RETURNING *`
   const result = await db.query(request, [quantity, unit_price, orderId, productId])
 
   if (result.rows.length === 0){

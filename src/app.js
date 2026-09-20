@@ -3,7 +3,8 @@ import cors from "cors";
 import productRoutes from './routes/productRoutes.js';
 import customerRoutes from './routes/customerRoutes.js';
 import orderRoutes from './routes/orderRoutes.js';
-import orderItemsRoutes from './routes/orderItemsRoutes.js'
+import orderItemsRoutes from './routes/orderItemsRoutes.js';
+import categoryRoutes from './routes/categoryRoutes.js'
 import errorHandler from "./middleware/errorHandler.js";
 
 
@@ -16,6 +17,7 @@ app.use('/api/products', productRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/orders', orderRoutes)
 app.use('/api/order-items', orderItemsRoutes)
+app.use('/api/categories', categoryRoutes)
 
 
 //No route matched
