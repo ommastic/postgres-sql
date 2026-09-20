@@ -13,6 +13,7 @@ export function validateOrderId(req, res, next){
 
 }
 
+
 export function validateCreateOrder(req, res, next){
   const { customer_id, order_date, order_status } = req.body;
   
@@ -32,7 +33,7 @@ export function validateCreateOrder(req, res, next){
     return res.status(400).json({error: 'The order status value is invalid'})
   }
 
-  req.validateBody = {customer_id, order_date: order_date.trim(), order_status: order_status.trim()};
+  req.validateBody = {customer_id, order_date: order_date.trim(), order_status: order_status.trim().toLowerCase()};
 
   next();
 }
