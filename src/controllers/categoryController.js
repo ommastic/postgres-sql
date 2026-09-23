@@ -20,20 +20,20 @@ export async function getCategoryWithId(req, res) {
 }
 
 export async function createCategory(req, res) {
-  const { name } = req.validateBody;
+  const { category_name } = req.validateBody;
 
-  const request = `INSERT INTO categories(name) VALUES($1) RETURNING *`;
-  const result = await db.query(request, [name]);
+  const request = `INSERT INTO categories(category_name) VALUES($1) RETURNING *`;
+  const result = await db.query(request, [category_name]);
 
   res.status(201).json(result.rows[0]);
 }
 
 export async function updateCategory(req, res) {
-  const { name } = req.validateBody;
+  const { category_name } = req.validateBody;
   const categoryId = req.categoryId;
 
   const request = `UPDATE categories SET category_name = $1 WHERE category_id = $2 RETURNING *`;
-  const result = await db.query(request, [name, categoryId]);
+  const result = await db.query(request, [category_name, categoryId]);
 
   if (result.rows.length === 0) {
     return res.status(404).json({ error: "Invalid category id" });

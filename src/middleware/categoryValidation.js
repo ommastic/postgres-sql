@@ -12,33 +12,34 @@ export function validateCategoryId(req, res, next){
 
 
 export function validateCreateCategory(req, res, next){
-  const { name } = req.body;
+  const { category_name } = req.body;
 
-  if (name === undefined){
+  if (category_name === undefined){
     return res.status(400).json({error: 'The category name must be provided'})
   }
   
-  if (typeof(name) !== 'string' || !name.trim()){
+  if (typeof(category_name) !== 'string' || !category_name.trim()){
     return res.status(400).json({error: 'category name is invalid'})
   }
 
-  req.validateBody = {name: name.trim()}
+  req.validateBody = {category_name: category_name.trim()}
 
   next();
 }
 
-export function validateUpdateCategory(req, res, next){
-  const { name } = req.body;
 
-  if (name === undefined){
+export function validateUpdateCategory(req, res, next){
+  const { category_name } = req.body;
+
+  if (category_name === undefined){
     return res.status(400).json({error: 'The category name must be provided'})
   }
 
-  if (typeof(name) !== 'string' || !name.trim()){
+  if (typeof(category_name) !== 'string' || !category_name.trim()){
     return res.status(400).json({error: 'category name is invalid'})
   }
 
-  req.validateBody = {name: name.trim()};
+  req.validateBody = {category_name: category_name.trim()};
 
   next();
 }
