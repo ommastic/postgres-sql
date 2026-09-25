@@ -13,6 +13,8 @@ export function validatePaymentId(req, res, next) {
   next();
 }
 
+
+
 export function validateCreatePayment(req, res, next) {
   const { order_id, amount, payment_date, payment_method, payment_status } =
     req.body;
@@ -72,6 +74,7 @@ export function validateCreatePayment(req, res, next) {
 
   next();
 }
+
 
 export function validateUpdatePayment(req, res, next) {
   const { order_id, amount, payment_date, payment_method, payment_status } =
