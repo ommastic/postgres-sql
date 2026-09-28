@@ -4,7 +4,7 @@ const officePositions = [
   "software engineer",
   "database administrator",
   "sales representative",
-  "warehouse cordinator",
+  "warehouse coordinator",
 ];
 
 export function validateEmployeeId(req, res, next) {
@@ -72,7 +72,7 @@ export function validateCreateEmployee(req, res, next) {
     first_name: first_name.trim(),
     last_name: last_name.trim(),
     email: email.trim().toLowerCase(),
-    position: position.trim(),
+    position: position.trim().toLowerCase(),
     office_id,
     reports_to: reports_to === null ? null : reports_to,
   };
@@ -103,47 +103,48 @@ export function validateUpdateEmployee(req, res, next) {
     if (typeof first_name !== "string" || !first_name.trim()) {
       return res.status(400).json({ error: "invalid first name" });
     }
-    validatedBody.first_name = first_name;
+    validatedBody.first_name = first_name.trim();
   }
 
   if (last_name !== undefined) {
     if (typeof last_name !== "string" || !last_name.trim()) {
       return res.status(400).json({ error: "invalid last name" });
     }
-    validatedBody.last_name = last_name;
+    validatedBody.last_name = last_name.trim();
   }
 
   if (email !== undefined) {
     if (typeof email !== "string" || !email.trim() || !email.includes("@")) {
       return res.status(400).json({ error: "invalid email address" });
     }
-    validatedBody.email = email;
+    validatedBody.email = email.trim.toLowerCase();
   }
 
   if (position !== undefined) {
     if (
       typeof position !== "string" ||
       !position.trim() ||
-      !officePositions.includes(position)
+      !officePositions.includes(position.trim().toLowerCase())
     ) {
       return res.status(400).json({ error: "invalid position" });
     }
-    validatedBody.position = position;
+    validatedBody.position = position.trim().toLowerCase();
   }
 
   if (office_id !== undefined) {
     if (!Number.isInteger(office_id) || office_id <= 0) {
       return res.status(400).json({ error: "invalid office id" });
     }
-    validatedBody.office_id = email;
+    validatedBody.office_id = office_id;
   }
 
   if (reports_to !== undefined) {
     if (reports_to === null) {
-      validated.reports_to = null;
+      validatedBody.reports_to = null;
     } else if (!Number.isInteger(reports_to) || reports_to <= 0) {
       return res.status(400).json({ error: "invalid reports_to id" });
     }
+    validatedBody.reports_to = reports_to
   }
 
   req.validateBody = validatedBody;
