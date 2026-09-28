@@ -60,10 +60,10 @@ export async function updatePayment(req, res) {
   const setClause = fields
     .map((field, index) => `${field} = $${index + 1}`)
     .join(", ");
-  const paymentIDPosition = values.length + 1;
+  const paymentIdPosition = values.length + 1;
   values.push(paymentId);
 
-  const request = `UPDATE payments SET ${setClause} WHERE payment_id = $${paymentIDPosition} RETURNING *`;
+  const request = `UPDATE payments SET ${setClause} WHERE payment_id = $${paymentIdPosition} RETURNING *`;
   const result = await db.query(request, values);
   if (result.rows.length === 0) {
     return res.status(404).json({ error: "invalid payment id" });

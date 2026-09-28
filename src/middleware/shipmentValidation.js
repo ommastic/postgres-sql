@@ -55,9 +55,11 @@ export function validateCreateShipment(req, res, next) {
   }
 
   if (
-    typeof shipping_date !== "string" ||
-    !shipping_date.trim() ||
-    Number.isNaN(Date.parse(shipping_date))
+    shipping_date !== undefined &&
+    shipping_date !== null &&
+    (typeof shipping_date !== "string" ||
+      !shipping_date.trim() ||
+      Number.isNaN(Date.parse(shipping_date)))
   ) {
     return res.status(400).json({ error: "invalid shipping date" });
   }
@@ -84,7 +86,10 @@ export function validateCreateShipment(req, res, next) {
     order_id,
     carrier: carrier.trim().toLowerCase(),
     tracking_number: tracking_number.trim(),
-    shipping_date: shipping_date.trim(),
+    shipping_date:
+      shipping_date === undefined || shipping_date === null
+        ? null
+        : shipping_date.trim(),
     delivery_date:
       delivery_date === undefined || delivery_date === null
         ? null
@@ -146,14 +151,18 @@ export function validateUpdateShipment(req, res, next) {
   }
 
   if (shipping_date !== undefined) {
-    if (
-      typeof shipping_date !== "string" ||
-      !shipping_date.trim() ||
-      Number.isNaN(Date.parse(shipping_date))
-    ) {
-      return res.status(400).json({ error: "invalid shipping date" });
+    if (shipping_date === null) {
+      validatedBody.shipping_date = null;
+    } else {
+      if (
+        typeof shipping_date !== "string" ||
+        !shipping_date.trim() ||
+        Number.isNaN(Date.parse(shipping_date))
+      ) {
+        return res.status(400).json({ error: "invalid shipping date" });
+      }
+      validatedBody.shipping_date = shipping_date.trim();
     }
-    validatedBody.shipping_date = shipping_date.trim();
   }
 
   if (delivery_date !== undefined) {
