@@ -9,5 +9,9 @@ export default function errorHandler(err, req, res, next){
     return res.status(409).json({error: 'Resource already exist'})
   }
 
+  if (err.statusCode){
+    return res.status(err.statusCode).json({error: err.message})
+  }
+
   res.status(500).json({error: "Server Error"})
 };
