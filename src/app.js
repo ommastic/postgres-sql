@@ -12,6 +12,7 @@ import shipmentRoutes from './routes/shipmentRoutes.js';
 import employeeRoutes from './routes/employeeRoutes.js';
 import officeRoutes from './routes/officeRoutes.js'
 import errorHandler from "./middleware/errorHandler.js";
+import transactionRoutes from './routes/transactionRoutes.js'
 
 
 const app = express();
@@ -30,6 +31,7 @@ app.use('/api/payments', paymentRoutes)
 app.use('/api/shipments', shipmentRoutes)
 app.use('/api/employees', employeeRoutes)
 app.use('/api/offices', officeRoutes)
+app.use('/api/transactions', transactionRoutes)
 
 
 //No route matched
