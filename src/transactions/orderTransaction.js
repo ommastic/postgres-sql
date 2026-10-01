@@ -20,7 +20,9 @@ export async function orderTransactions(req, res) {
     const createdItems = [];
     const finalInventory = [];
 
-    for (const item of items) {
+    const sortedItems = [...items].sort((a, b) => a.product_id - b.product_id);
+
+    for (const item of sortedItems) {
       const { product_id, quantity } = item;
 
       const unitPriceRequest = `SELECT price FROM products WHERE product_id = $1`;
