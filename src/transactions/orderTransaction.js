@@ -22,7 +22,7 @@ export async function orderTransactions(req, res) {
 
     const sortedItems = [...items].sort((a, b) => a.product_id - b.product_id);
 
-    for (const item of sortedItems) {
+    for (const item of sortedItems){
       const { product_id, quantity } = item;
 
       const unitPriceRequest = `SELECT price FROM products WHERE product_id = $1`;
@@ -30,7 +30,7 @@ export async function orderTransactions(req, res) {
         product_id,
       ]);
 
-      if (unitPriceResponse.rows.length === 0) {
+      if (unitPriceResponse.rows.length === 0){
         throw new AppError("Product does not exist", 404);
       }
 
@@ -42,13 +42,13 @@ export async function orderTransactions(req, res) {
         product_id,
       ]);
 
-      if (inventoryResponse.rows.length === 0) {
+      if (inventoryResponse.rows.length === 0){
         throw new AppError("Product not available in the warehouse", 404);
       }
 
       const availableQuantity = inventoryResponse.rows[0].quantity;
 
-      if (availableQuantity < quantity) {
+      if (availableQuantity < quantity){
         throw new AppError("Insufficient Inventory", 409);
       }
 
