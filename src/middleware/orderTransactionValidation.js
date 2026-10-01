@@ -65,7 +65,7 @@ export function validateCreateOrderTransaction(req, res, next) {
     if (product_id === undefined || quantity === undefined) {
       return res
         .status(400)
-        .json({ error: "product_id and quantity are required " });
+        .json({ error: "product_id and quantity are required" });
     }
     if (!Number.isInteger(product_id) || product_id <= 0) {
       return res
