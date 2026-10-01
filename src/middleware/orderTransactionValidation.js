@@ -56,18 +56,13 @@ export function validateCreateOrderTransaction(req, res, next) {
   }
 
   for (const item of items) {
-    
     if (item === null || typeof item !== "object" || Array.isArray(item)) {
       return res.status(400).json({ error: "item must be an object" });
     }
 
-    const { product_id, quantity, unit_price } = item;
+    const { product_id, quantity } = item;
 
-    if (
-      product_id === undefined ||
-      quantity === undefined ||
-      unit_price === undefined
-    ) {
+    if (product_id === undefined || quantity === undefined) {
       return res
         .status(400)
         .json({ error: "product_id, quantity and unit_price are required " });
@@ -86,14 +81,6 @@ export function validateCreateOrderTransaction(req, res, next) {
       return res
         .status(400)
         .json({ error: "Quantity must be a positive integer" });
-    }
-
-    if (
-      typeof unit_price !== "number" ||
-      !Number.isFinite(unit_price) ||
-      unit_price < 0
-    ) {
-      return res.status(400).json({ error: "invalid unit price" });
     }
     productIds.add(product_id);
   }
