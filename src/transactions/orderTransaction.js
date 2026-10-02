@@ -60,12 +60,16 @@ export async function orderTransactions(req, res) {
         unit_price,
       ]);
 
-      const updatedInventory = `UPDATE inventory SET quantity = quantity - $1 WHERE warehouse_id = $2 AND product_id = $3 RETURNING *`;
+      const updatedInventory = `UPDATE inventory SET quantity = quantity - $1 WHERE warehouse_id = $2 AND product_id = $3 AND quantity >= $1 RETURNING *`;
       const updatedResult = await client.query(updatedInventory, [
         quantity,
         warehouse_id,
         product_id,
       ]);
+
+      if (updatedResult.rows.length === 0){
+        throw new AppError("Insufficient inventory", 409)
+      }
 
       createdItems.push(itemResult.rows[0]);
       finalInventory.push(updatedResult.rows[0]);
