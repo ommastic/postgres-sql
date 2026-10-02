@@ -22,36 +22,26 @@ export async function orderTransactions(req, res) {
 
     const sortedItems = [...items].sort((a, b) => a.product_id - b.product_id);
 
-    for (const item of sortedItems){
+    for (const item of sortedItems) {
       const { product_id, quantity } = item;
 
-      const unitPriceRequest = `SELECT price FROM products WHERE product_id = $1`;
-      const unitPriceResponse = await client.query(unitPriceRequest, [
-        product_id,
-      ]);
+      const unitPriceInventoryRequest = `SELECT i.product_id, i.warehouse_id, p.price, i.quantity FROM products p INNER JOIN inventory i ON p.product_id = i.product_id WHERE i.warehouse_id = $1 AND i.product_id = $2 FOR UPDATE OF i`;
 
-      if (unitPriceResponse.rows.length === 0){
-        throw new AppError("Product does not exist", 404);
+      const unitPriceInventoryResponse = await client.query(
+        unitPriceInventoryRequest,
+        [warehouse_id, product_id],
+      );
+
+      if (unitPriceInventoryResponse.rows.length === 0) {
+        throw new AppError("Product does not exist in the warehouse", 404);
       }
 
-      const unit_price = unitPriceResponse.rows[0].price;
+      const availableQuantity = unitPriceInventoryResponse.rows[0].quantity;
+      const unit_price = unitPriceInventoryResponse.rows[0].price;
 
-      const inventoryRequest = `SELECT * FROM inventory WHERE warehouse_id = $1 AND product_id = $2 FOR UPDATE`;
-      const inventoryResponse = await client.query(inventoryRequest, [
-        warehouse_id,
-        product_id,
-      ]);
-
-      if (inventoryResponse.rows.length === 0){
-        throw new AppError("Product not available in the warehouse", 404);
-      }
-
-      const availableQuantity = inventoryResponse.rows[0].quantity;
-
-      if (availableQuantity < quantity){
+      if (availableQuantity < quantity) {
         throw new AppError("Insufficient Inventory", 409);
       }
-
       const itemRequest = `INSERT INTO order_items( order_id, product_id, quantity, unit_price) VALUES($1, $2, $3, $4) RETURNING *`;
       const itemResult = await client.query(itemRequest, [
         order_id,
@@ -67,8 +57,8 @@ export async function orderTransactions(req, res) {
         product_id,
       ]);
 
-      if (updatedResult.rows.length === 0){
-        throw new AppError("Insufficient inventory", 409)
+      if (updatedResult.rows.length === 0) {
+        throw new AppError("Insufficient inventory", 409);
       }
 
       createdItems.push(itemResult.rows[0]);
